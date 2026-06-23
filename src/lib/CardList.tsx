@@ -1,23 +1,12 @@
 import YiiLang from '@/utils/yii-lang';
 
-import type {TKeysOfType} from '@/types/helper';
-import type {CSSProperties, ReactElement} from 'react';
+import type {TCardListProps} from '@/lib/types';
 
 export function rowInactiveClassNameHof<T>(statusKey: keyof T, inactiveValue: boolean | number | string) {
   return (data: T) => {
     return data[statusKey] === inactiveValue ? 'opacity-50' : undefined;
   };
 }
-
-export type TCardListProps<T> = {
-  className?: string;
-  idKey: TKeysOfType<T, number | string>; // Tem que ser uma coluna existente, somente dos tipos numero ou string
-  rowClassNameFn?: (data: T) => string | undefined;
-  rowHeight?: number;
-  rowRenderer: (data: T, index: number) => ReactElement;
-  rows: Array<T>;
-  style?: CSSProperties;
-};
 
 export default function CardList<T>(props: TCardListProps<T>) {
   const {className, idKey, rowClassNameFn, rowHeight, rowRenderer, rows, style} = props;

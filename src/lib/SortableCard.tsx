@@ -6,27 +6,9 @@ import invariant from 'tiny-invariant';
 
 import SortableDropIndicator from './SortableDropIndicator';
 
-import type {TDataCard, TDndCardData, TDndEdge} from './types';
-import type {ReactElement, RefObject} from 'react';
+import type {TDndCardData, TDndEdge, TSortableCardData, TSortableCardProps} from './types';
 
-type TItemRendererProps<GData> = {
-  data: GData;
-  index: number;
-  refHtmlHandleDiv?: RefObject<HTMLDivElement | null>;
-};
-
-export type TDndCardProps<GData extends TDataCard<GData>> = {
-  data: GData;
-  hasCustomHandle?: boolean;
-  index?: number;
-  itemRenderer: (rendererProps: TItemRendererProps<GData>) => ReactElement;
-  keyPath?: string;
-  level: number;
-  readOnly?: boolean;
-  sibilingsLength: number;
-};
-
-export default function SortableCard<GData extends TDataCard<GData>>(props: TDndCardProps<GData>) {
+export default function SortableCard<GData extends TSortableCardData<GData>>(props: TSortableCardProps<GData>) {
   const {data, hasCustomHandle, index, itemRenderer, keyPath, level, readOnly, sibilingsLength} = props;
 
   const refHtmlCardDiv = useRef<HTMLDivElement>(null);
@@ -113,11 +95,11 @@ export default function SortableCard<GData extends TDataCard<GData>>(props: TDnd
 
   return (
     <div
-      className={`level-${level} ${isDragging ? 'opacity-50' : ''} ${isLevelZero ? '' : 'relative'}`}
+      className={`level-${level} ${level > 1 ? 'ml-8' : ''} flex flex-col gap-2 ${isDragging ? 'opacity-50' : ''} ${isLevelZero ? '' : 'relative'}`}
       ref={refHtmlCardDiv}
     >
-      {level === 0 ? null : (
-        <div className="flex items-center gap-4 py-6 px-8 agg--section">
+      {level === 0 ? undefined : (
+        <div className="agg--section flex items-center gap-4 px-8 py-6">
           {hasCustomHandle || readOnly ? undefined : (
             <div
               className={`flex-none cursor-grab ${canDrag ? '' : 'cursor-default opacity-50'}`}
@@ -145,7 +127,7 @@ export default function SortableCard<GData extends TDataCard<GData>>(props: TDnd
               </svg>
             </div>
           )}
-          <div className="flex items-center flex-1 gap-4 [&>div]:flex-1 [&>div]:last:flex-none">
+          <div className="flex flex-1 items-center gap-4 [&>div]:flex-1 [&>div]:last:flex-none">
             {itemRenderer({
               data,
               index: index || 0,

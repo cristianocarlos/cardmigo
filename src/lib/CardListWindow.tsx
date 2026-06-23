@@ -1,6 +1,6 @@
 import CardList from './CardList';
 
-import type {TCardListProps} from './CardList';
+import type {TCardListProps} from './types';
 
 export default function CardListWindow<T>(props: Omit<TCardListProps<T>, 'className' | 'style'>) {
   const {idKey, rowClassNameFn, rowHeight, rowRenderer, rows} = props;

@@ -2,31 +2,9 @@
     --sortable-drop-indicator-gap: 0;
 }
 
-.mf__sortable-board .mf__sortable-card.level-1 + .mf__sortable-card.level-1,
-.mf__sortable-board .mf__sortable-card.level-2,
-.mf__sortable-board .mf__sortable-card.level-3,
-.mf__sortable-board .mf__sortable-card.level-4,
-.mf__sortable-board .mf__sortable-card.level-5 {
-    margin-top: 8px;
-}
-
-.mf__sortable-board .mf__sortable-card.level-2,
-.mf__sortable-board .mf__sortable-card.level-3,
-.mf__sortable-board .mf__sortable-card.level-4,
-.mf__sortable-board .mf__sortable-card.level-5 {
-    margin-left: 32px;
-}
-
 /* Drop indicator styling */
 .mf__sortable-board .mf__sortable-drop-indicator {
-    background-color: #1d4ed8;
-    box-sizing: border-box;
-    height: 2px;
-    left: 4px;
-    position: absolute;
     pointer-events: none;
-    right: 0;
-    z-index: 10;
 }
 
 /* Small circle styling */

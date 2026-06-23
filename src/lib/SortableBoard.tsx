@@ -3,27 +3,15 @@ import {useCallback, useState} from 'react';
 import SortableCard from './SortableCard';
 import useSortableDrop from './useSortableDrop';
 
-import type {TDndCardProps} from './SortableCard';
-import type {TDataCard} from './types';
+import type {TSortableBoardProps, TSortableCardData, TSortableItems} from './types';
 
-type TDndBoardSortableItems<GData> = {items: Array<GData>};
-
-export type IPDndBoard<GData extends TDataCard<GData>> = Pick<
-  TDndCardProps<GData>,
-  'hasCustomHandle' | 'itemRenderer'
-> & {
-  handleDragEnd?: (reorderedItems: TDndBoardSortableItems<GData>) => void;
-  readOnly?: boolean;
-  rows: Array<GData>;
-};
-
-export default function SortableBoard<GData extends TDataCard<GData>>(props: IPDndBoard<GData>) {
+export default function SortableBoard<GData extends TSortableCardData<GData>>(props: TSortableBoardProps<GData>) {
   const {handleDragEnd, hasCustomHandle, itemRenderer, readOnly, rows} = props;
 
-  const [items, setItems] = useState<TDndBoardSortableItems<GData>>({items: rows});
+  const [items, setItems] = useState<TSortableItems<GData>>({items: rows});
 
   const handleCustomDrop = useCallback(
-    (reorderedItems: TDndBoardSortableItems<GData>) => {
+    (reorderedItems: TSortableItems<GData>) => {
       handleDragEnd?.(reorderedItems);
     },
     [handleDragEnd],

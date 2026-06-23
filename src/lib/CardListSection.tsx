@@ -1,11 +1,6 @@
 import CardList from './CardList';
 
-import type {TCardListProps} from './CardList';
-
-type TCardListSectionProps<T> = Pick<TCardListProps<T>, 'idKey' | 'rowClassNameFn' | 'rowRenderer' | 'rows'> & {
-  rowHeight: NonNullable<TCardListProps<T>['rowHeight']>;
-  visibleCount?: number;
-};
+import type {TCardListSectionProps} from './types';
 
 export default function CardListSection<T>(props: TCardListSectionProps<T>) {
   const {idKey, rowClassNameFn, rowHeight, rowRenderer, rows, visibleCount} = props;
