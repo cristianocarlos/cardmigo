@@ -23,7 +23,7 @@ type TDndCardRecord = {
   isActiveDueToStickiness: boolean;
 };
 
-export type TCardmigoData<G> = {id: number; sortable_parent_id?: TDndParentId} & TCardmigoItemsTree<G>;
+export type TCardmigoData<G> = {id: number; items?: TCardmigoItemsTree<G>['items']; sortable_parent_id?: TDndParentId;};
 
 export type TDndHandleDropParams = {
   location: {
@@ -33,10 +33,10 @@ export type TDndHandleDropParams = {
   source: {data: TDndCardData};
 };
 
-export type TCardmigoItemsTree<GData> = {items: Array<GData>};
+export type TCardmigoItemsTree<G> = {items: Array<G>};
 
-export type TCardmigoItemRenderer<GData> = (rendererProps: {
-  data: GData;
+export type TCardmigoItemRenderer<G> = (rendererProps: {
+  data: G;
   index: number;
   refHtmlHandleDiv?: RefObject<HTMLDivElement | null>;
 }) => ReactElement;
