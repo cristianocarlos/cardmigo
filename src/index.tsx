@@ -1,11 +1,8 @@
 // import './styles.css'; // não funciona essa bosta
 
-import {rowInactiveClassNameHof} from './lib/CardList';
-import CardListSection from './lib/CardListSection';
-import CardListWindow from './lib/CardListWindow';
-import SortableBoard from './lib/SortableBoard';
+import Board from './lib/Board';
 
-import type {TSortableDragEndHandler, TSortableItemRenderer} from './lib/types';
+import type {TCardmigoItemRenderer, TCardmigoItemsTree} from './lib/types';
 
-export {CardListSection, CardListWindow, rowInactiveClassNameHof, SortableBoard};
-export type {TSortableDragEndHandler, TSortableItemRenderer};
+export type {TCardmigoItemRenderer, TCardmigoItemsTree};
+export default Board;

@@ -3,17 +3,17 @@ import {getReorderDestinationIndex} from '@atlaskit/pragmatic-drag-and-drop-hitb
 import {monitorForElements} from '@atlaskit/pragmatic-drag-and-drop/element/adapter';
 import {useCallback, useEffect} from 'react';
 
-import sortableReorder from './sortableReorder';
+import reorder from './reorder';
 
 import type {TDndHandleDropParams} from './types';
 
-export type TUseDndDrop<GItems> = {
+type TUseSortableDropParams<GItems> = {
   handleCustomDrop: (reorderedItems: GItems) => void;
   items: GItems;
   setItems: (reorderedItems: GItems) => void;
 };
 
-export default function useSortableDrop<G>({handleCustomDrop, items, setItems}: TUseDndDrop<G>) {
+export default function useDrop<G>({handleCustomDrop, items, setItems}: TUseSortableDropParams<G>) {
   // Function to handle drop events
   const handleDrop = useCallback(
     ({location, source}: TDndHandleDropParams) => {
@@ -35,7 +35,7 @@ export default function useSortableDrop<G>({handleCustomDrop, items, setItems}: 
       const dropTargetIndex = Number(dropTargetPath.substring(dropTargetPath.lastIndexOf('.') + 1));
       const dropTargetClosestEdge = extractClosestEdge(dropTargetData);
 
-      // Calculate the destination index for the card to be reordered within the same section
+      // Calculate the destination index for the cardmigo to be reordered within the same section
       const destinationIndex = getReorderDestinationIndex({
         axis: 'vertical',
         closestEdgeOfTarget: dropTargetClosestEdge,
@@ -43,7 +43,7 @@ export default function useSortableDrop<G>({handleCustomDrop, items, setItems}: 
         startIndex: draggedIndex,
       });
 
-      const reorderedItems = sortableReorder<G>({
+      const reorderedItems = reorder<G>({
         finishIndex: destinationIndex,
         items,
         keyPath: draggedParentPath,

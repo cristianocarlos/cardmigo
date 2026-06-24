@@ -4,11 +4,22 @@ import {draggable, dropTargetForElements} from '@atlaskit/pragmatic-drag-and-dro
 import {useEffect, useRef, useState} from 'react';
 import invariant from 'tiny-invariant';
 
-import SortableDropIndicator from './SortableDropIndicator';
+import DropIndicator from './DropIndicator';
 
-import type {TDndCardData, TDndEdge, TSortableCardData, TSortableCardProps} from './types';
+import type {TCardmigoData, TCardmigoItemRenderer, TDndCardData, TDndEdge} from './types';
 
-export default function SortableCard<GData extends TSortableCardData<GData>>(props: TSortableCardProps<GData>) {
+type TCardmigoCardProps<GData extends TCardmigoData<GData>> = {
+  data: GData;
+  hasCustomHandle?: boolean;
+  index?: number;
+  itemRenderer: TCardmigoItemRenderer<GData>;
+  keyPath?: string;
+  level: number;
+  readOnly?: boolean;
+  sibilingsLength: number;
+};
+
+export default function Card<GData extends TCardmigoData<GData>>(props: TCardmigoCardProps<GData>) {
   const {data, hasCustomHandle, index, itemRenderer, keyPath, level, readOnly, sibilingsLength} = props;
 
   const refHtmlCardDiv = useRef<HTMLDivElement>(null);
@@ -26,35 +37,35 @@ export default function SortableCard<GData extends TSortableCardData<GData>>(pro
     const htmlCardElement = refHtmlCardDiv.current;
     const htmlHandleElement = refHtmlHandleDiv.current;
 
-    invariant(htmlCardElement); // Ensure the card element exists
+    invariant(htmlCardElement); // Ensure the cardmigo element exists
 
     return combine(
       draggable({
         canDrag: () => canDrag,
         dragHandle: htmlHandleElement || undefined,
-        element: htmlCardElement, // Attach the card element to draggable
+        element: htmlCardElement, // Attach the cardmigo element to draggable
         getInitialData: (): TDndCardData => ({
           cardId: dataId,
           cardKeyPath: keyPath,
           cardParentId: data.sortable_parent_id,
-          type: 'card',
-        }), // Attach card data to a draggable item when dragging starts
+          type: 'cardmigo',
+        }), // Attach cardmigo data to a draggable item when dragging starts
         onDragStart: () => setIsDragging(true), // set isDragging to true when dragging starts
         onDrop: () => setIsDragging(false), // set isDragging to false when dragging ends
       }),
       dropTargetForElements({
         element: htmlCardElement,
         getData: ({element, input}) => {
-          // To attach card data to a drop target
+          // To attach cardmigo data to a drop target
           const closestEdgeData: TDndCardData = {
             cardId: dataId,
             cardKeyPath: keyPath,
             cardParentId: data.sortable_parent_id,
-            type: 'card',
+            type: 'cardmigo',
           };
           // Attaches the closest edge (top or bottom) to the data object
-          // This data will be used to determine where to drop card relative
-          // to the target card.
+          // This data will be used to determine where to drop cardmigo relative
+          // to the target cardmigo.
           return attachClosestEdge(closestEdgeData, {
             allowedEdges: ['top', 'bottom'],
             element,
@@ -95,16 +106,13 @@ export default function SortableCard<GData extends TSortableCardData<GData>>(pro
 
   return (
     <div
-      className={`level-${level} ${level > 1 ? 'ml-8' : ''} flex flex-col gap-2 ${isDragging ? 'opacity-50' : ''} ${isLevelZero ? '' : 'relative'}`}
+      className={`flex flex-col gap-2 ${level > 1 ? 'ml-8' : ''} ${isDragging ? 'opacity-50' : ''} ${isLevelZero ? '' : 'relative'}`}
       ref={refHtmlCardDiv}
     >
       {level === 0 ? undefined : (
-        <div className="agg--section flex items-center gap-4 px-8 py-6">
-          {hasCustomHandle || readOnly ? undefined : (
-            <div
-              className={`flex-none cursor-grab ${canDrag ? '' : 'cursor-default opacity-50'}`}
-              ref={refHtmlHandleDiv}
-            >
+        <div className="flex items-center gap-4 rounded-lg bg-white p-6 shadow-lg max-sm:p-4">
+          {hasCustomHandle || readOnly ? null : (
+            <div className={`cursor-grab ${canDrag ? '' : 'cursor-default! opacity-50'}`} ref={refHtmlHandleDiv}>
               <svg
                 aria-hidden="true"
                 className="lucide lucide-move"
@@ -127,7 +135,7 @@ export default function SortableCard<GData extends TSortableCardData<GData>>(pro
               </svg>
             </div>
           )}
-          <div className="flex flex-1 items-center gap-4 [&>div]:flex-1 [&>div]:last:flex-none">
+          <div className="flex-1">
             {itemRenderer({
               data,
               index: index || 0,
@@ -138,7 +146,7 @@ export default function SortableCard<GData extends TSortableCardData<GData>>(pro
       )}
       {data.items?.map((itemData, itemIndex) => {
         return (
-          <SortableCard
+          <Card
             data={itemData}
             hasCustomHandle={hasCustomHandle}
             index={itemIndex}
@@ -152,7 +160,7 @@ export default function SortableCard<GData extends TSortableCardData<GData>>(pro
         );
       })}
       {/* render the DropIndicator if there's a closest edge */}
-      {closestEdge && level !== 0 ? <SortableDropIndicator edge={closestEdge} gap="8px" /> : null}
+      {closestEdge && level !== 0 ? <DropIndicator edge={closestEdge} gap="8px" /> : undefined}
     </div>
   );
 }
